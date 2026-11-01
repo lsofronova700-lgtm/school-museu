@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Музей нашей школы</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Golos+Text:wght@400;500;600&family=PT+Mono&display=swap">
+<style>
+/* Макет: «школьная доска» в шапке, ниже — залы музея, экспонаты как музейные этикетки с инвентарными номерами */
+:root{
+  --bg:#f3f4ef; --surface:#ffffff; --ink:#1c2420; --muted:#5d6a63; --line:#d6dbd3;
+  --board:#23392f; --chalk:#eef2ea; --brass:#b5862f; --brass-soft:#f1e5c8;
+  --display:"Yeseva One", Georgia, "Times New Roman", serif;
+  --body:"Golos Text", "Segoe UI", Roboto, Arial, sans-serif;
+  --mono:"PT Mono", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121815; --surface:#1a221e; --ink:#e6ebe4; --muted:#9aa89f; --line:#2c3833;
+  --board:#1b2d24; --chalk:#e9eee6; --brass:#d6a74e; --brass-soft:#3a3020; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1a221e; --ink:#e6ebe4; --muted:#9aa89f; --line:#2c3833;
+  --board:#1b2d24; --chalk:#e9eee6; --brass:#d6a74e; --brass-soft:#3a3020; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.15;margin:0}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Шапка-доска */
+.board{background:var(--board);color:var(--chalk);position:relative;overflow:hidden}
+.board::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;
+  background-image:radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 70% 60%,#fff 0 1px,transparent 1.5px);
+  background-size:23px 19px,31px 27px}
+.board .wrap{padding-block:28px 48px;position:relative;z-index:1}
+nav.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+nav.top .brand{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+nav.top ul{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav.top a{color:var(--chalk);text-decoration:none;font-size:15px;opacity:.85;border-bottom:1px solid transparent}
+nav.top a:hover,nav.top a:focus-visible{opacity:1;border-color:var(--brass)}
+.hero h1{font-size:clamp(38px,7vw,76px);max-width:14ch}
+.hero p{max-width:58ch;font-size:18px;opacity:.88;margin:20px 0 0}
+.chalk-date{font-family:var(--mono);color:var(--brass);font-size:14px;margin-bottom:14px;display:block}
+.stats{display:flex;gap:40px;flex-wrap:wrap;margin-top:36px;border-top:1px dashed rgba(238,242,234,.3);padding-top:22px}
+.stats b{display:block;font-family:var(--display);font-size:34px;font-weight:400;color:var(--chalk);font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;opacity:.75}
+
+section{padding-block:64px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+.sec-head h2{font-size:clamp(28px,4vw,42px)}
+.sec-head p{max-width:52ch;color:var(--muted);margin:8px 0 0}
+
+/* Залы */
+.halls{display:flex;gap:8px;flex-wrap:wrap}
+.halls button{font:inherit;font-size:14px;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.halls button[aria-pressed="true"]{background:var(--board);border-color:var(--board);color:var(--chalk)}
+.halls button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+/* Экспонаты */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.item{background:var(--surface);border:1px solid var(--line);text-align:left;font:inherit;color:inherit;padding:0;cursor:pointer;display:flex;flex-direction:column;transition:transform .2s ease,border-color .2s}
+.item:hover{transform:translateY(-3px);border-color:var(--brass)}
+.item:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+.item .pic{aspect-ratio:4/3;max-width:100%;background:var(--brass-soft);display:grid;place-items:center}
+.item .pic svg{width:46%;height:auto;color:var(--board)}
+:root[data-theme="dark"] .item .pic svg{color:var(--brass)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .item .pic svg{color:var(--brass)}}
+.tag{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line);flex:1}
+.tag h3{font-size:20px}
+.tag .meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* Хроника */
+.chronicle{background:var(--surface);border-block:1px solid var(--line)}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:110px 1fr;gap:24px;padding:18px 0;border-top:1px solid var(--line)}
+.timeline li:first-child{border-top:0}
+.timeline .yr{font-family:var(--display);font-size:28px;color:var(--brass);font-variant-numeric:tabular-nums}
+.timeline h3{font-family:var(--body);font-weight:600;font-size:17px;margin-bottom:4px}
+.timeline p{margin:0;color:var(--muted);max-width:62ch}
+@media (max-width:520px){.timeline li{grid-template-columns:1fr;gap:4px}}
+
+/* Люди */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.person{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid var(--line);background:var(--surface)}
+.avatar{flex:none;width:56px;height:56px;border-radius:50%;background:var(--board);color:var(--chalk);display:grid;place-items:center;font-family:var(--display);font-size:22px}
+.person h3{font-family:var(--body);font-weight:600;font-size:17px}
+.person .role{font-size:13px;color:var(--brass);font-family:var(--mono)}
+.person p{margin:6px 0 0;font-size:15px;color:var(--muted)}
+
+/* Книга отзывов */
+.guest{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media (max-width:760px){.guest{grid-template-columns:1fr}}
+form{display:grid;gap:12px}
+label{font-size:14px;font-weight:500}
+input,textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:4px;width:100%;box-sizing:border-box}
+input:focus,textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
+.btn{font:inherit;font-weight:600;padding:11px 20px;background:var(--board);color:var(--chalk);border:0;border-radius:4px;cursor:pointer;justify-self:start}
+.btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.notes{display:grid;gap:14px;align-content:start}
+.note{border-left:3px solid var(--brass);padding:4px 0 4px 14px}
+.note p{margin:0}
+.note small{color:var(--muted);font-family:var(--mono);font-size:12px}
+
+footer{background:var(--board);color:var(--chalk)}
+footer .wrap{padding-block:32px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px;opacity:.85}
+
+/* Карточка экспоната */
+dialog{border:0;padding:0;max-width:min(640px,calc(100vw - 32px));width:100%;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,15,.6)}
+.dlg-pic{background:var(--brass-soft);display:grid;place-items:center;padding:28px}
+.dlg-pic svg{width:140px;height:auto;color:var(--board)}
+.dlg-body{padding:24px;display:grid;gap:12px}
+.dlg-body h2{font-size:30px}
+.dlg-body dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0;font-size:14px}
+.dlg-body dt{color:var(--muted)}
+.dlg-body dd{margin:0}
+.close{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:var(--surface);color:var(--ink);font-size:22px;cursor:pointer}
+.close:focus-visible{outline:2px solid var(--brass)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="board">
+  <div class="wrap">
+    <nav class="top" aria-label="Разделы">
+      <span class="brand">Школьный музей · онлайн</span>
+      <ul>
+        <li><a href="#exhibits">Экспонаты</a></li>
+        <li><a href="#chronicle">Хроника</a></li>
+        <li><a href="#people">Люди школы</a></li>
+        <li><a href="#guestbook">Книга отзывов</a></li>
+      </ul>
+    </nav>
+    <div class="hero">
+      <span class="chalk-date">Основана в 1936 году</span>
+      <h1>Музей истории нашей школы</h1>
+      <p>Здесь собраны вещи, фотографии и рассказы, которые хранят память о девяти десятилетиях школьной жизни: от первых букварей до сегодняшних побед на олимпиадах.</p>
+      <div class="stats">
+        <div><b>90</b><span>лет истории</span></div>
+        <div><b>12</b><span>экспонатов онлайн</span></div>
+        <div><b>4</b><span>зала экспозиции</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="exhibits">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="label">Экспозиция</span>
+          <h2>Залы и экспонаты</h2>
+          <p>Нажмите на экспонат, чтобы прочитать его историю.</p>
+        </div>
+        <div class="halls" role="group" aria-label="Фильтр по залам" id="halls"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="chronicle" class="chronicle">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="label">Летопись</span><h2>Хроника школы</h2></div></div>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </section>
+
+  <section id="people">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="label">Зал славы</span><h2>Люди школы</h2><p>Учителя и выпускники, которыми мы гордимся.</p></div></div>
+      <div class="people" id="peopleList"></div>
+    </div>
+  </section>
+
+  <section id="guestbook" class="chronicle">
+    <div class="wrap guest">
+      <div>
+        <span class="label">Для посетителей</span>
+        <h2 style="font-size:clamp(28px,4vw,42px);margin-bottom:16px">Книга отзывов</h2>
+        <form id="gbForm">
+          <label for="gbName">Ваше имя и год выпуска</label>
+          <input id="gbName" required placeholder="Например: Анна, выпуск 1998">
+          <label for="gbText">Запись</label>
+          <textarea id="gbText" rows="4" required placeholder="Что вам запомнилось о школе?"></textarea>
+          <button class="btn" type="submit">Оставить запись</button>
+        </form>
+      </div>
+      <div class="notes" id="notes" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Музей истории школы · Руководитель музея: ФИО</span>
+    <span>Материалы предоставлены выпускниками и учителями</span>
+  </div>
+</footer>
+
+<dialog id="dlg">
+  <div style="position:relative">
+    <button class="close" id="dlgClose" aria-label="Закрыть">×</button>
+    <div class="dlg-pic" id="dlgPic"></div>
+    <div class="dlg-body">
+      <span class="label" id="dlgHall"></span>
+      <h2 id="dlgTitle"></h2>
+      <p id="dlgText" style="margin:0"></p>
+      <dl id="dlgMeta"></dl>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const ICONS={
+  book:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 14h20c3 0 4 2 4 4v34c0-2-1-4-4-4H8z"/><path d="M56 14H36c-3 0-4 2-4 4v34c0-2 1-4 4-4h20z"/></svg>',
+  ink:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 30h28l4 22H14z"/><rect x="24" y="22" width="16" height="8"/><path d="M44 8 30 26"/></svg>',
+  desk:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 24l48-6v8L8 32z"/><path d="M12 32v22M52 26v28M8 44h48"/></svg>',
+  tie:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 14 32 30 54 14"/><path d="M32 30 22 54M32 30l10 24"/><circle cx="32" cy="30" r="4"/></svg>',
+  photo:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="14" width="48" height="36"/><circle cx="24" cy="28" r="5"/><path d="m8 46 16-12 12 8 8-6 12 10"/></svg>',
+  medal:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 8l10 18 10-18"/><circle cx="32" cy="40" r="14"/><path d="m32 32 2.5 5 5.5.8-4 3.9 1 5.5-5-2.6-5 2.6 1-5.5-4-3.9 5.5-.8z"/></svg>',
+  cup:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 10h24v14a12 12 0 0 1-24 0z"/><path d="M20 14h-8c0 8 4 12 8 12M44 14h8c0 8-4 12-8 12M32 36v10M22 54h20l-2-8H24z"/></svg>',
+  bell:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 44V30a14 14 0 0 1 28 0v14l4 4H14z"/><path d="M28 52a4 4 0 0 0 8 0M32 10v6"/></svg>',
+  letter:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 20h44v30H10z"/><path d="m10 20 22 16 22-16"/></svg>',
+  globe:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="32" cy="28" r="16"/><path d="M16 28h32M32 12c-6 6-6 26 0 32M32 12c6 6 6 26 0 32M24 54h16M32 44v10"/></svg>',
+  diary:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="14" y="8" width="36" height="48"/><path d="M22 8v48M28 20h16M28 28h16M28 36h10"/></svg>',
+  flag:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 56V8M14 10h34l-6 10 6 10H14"/></svg>'
+};
+const HALLS=["Все залы","История школы","Школьный быт","Пионерия и комсомол","Достижения"];
+const EXHIBITS=[
+  {id:"ШМ-001",hall:"История школы",title:"Первый букварь",year:"1936",icon:"book",from:"Передан выпускницей 1946 года",text:"Букварь, по которому учились первые ученики школы в год её открытия. На последней странице карандашом написано имя владельца."},
+  {id:"ШМ-007",hall:"Школьный быт",title:"Чернильница-непроливайка",year:"1950-е",icon:"ink",from:"Из фондов школы",text:"Такие чернильницы стояли на каждой парте до перехода на шариковые ручки. Форма горлышка не давала чернилам пролиться, даже если её перевернуть."},
+  {id:"ШМ-012",hall:"Школьный быт",title:"Парта с откидной крышкой",year:"1960-е",icon:"desk",from:"Сохранена при ремонте 1985 года",text:"Деревянная парта на двух учеников. На крышке видны вырезанные инициалы нескольких поколений школьников."},
+  {id:"ШМ-018",hall:"Пионерия и комсомол",title:"Пионерский галстук",year:"1970-е",icon:"tie",from:"Передан выпускником 1979 года",text:"Галстук и зажим дружины имени школы. Рядом в витрине хранится фотография торжественного приёма в пионеры."},
+  {id:"ШМ-021",hall:"Пионерия и комсомол",title:"Знамя пионерской дружины",year:"1965",icon:"flag",from:"Из фондов школы",text:"С этим знаменем дружина выходила на линейки и смотры строя и песни. Вышивку выполнили учительницы труда."},
+  {id:"ШМ-025",hall:"История школы",title:"Фото первого выпуска",year:"1946",icon:"photo",from:"Семейный архив выпускников",text:"Первый выпуск школы — 23 человека. Многие из них ушли на фронт со школьной скамьи и вернулись доучиваться после войны."},
+  {id:"ШМ-030",hall:"История школы",title:"Фронтовое письмо",year:"1943",icon:"letter",from:"Передано родственниками",text:"Треугольник, который бывший ученик отправил своей учительнице с фронта. Письмо читают на каждом уроке мужества 9 Мая."},
+  {id:"ШМ-034",hall:"Школьный быт",title:"Школьный звонок",year:"1958",icon:"bell",from:"Из фондов школы",text:"Латунный колокольчик, которым давали первый и последний звонок до установки электрического. Им и сейчас звонят на линейках."},
+  {id:"ШМ-040",hall:"Школьный быт",title:"Дневник отличника",year:"1982",icon:"diary",from:"Передан выпускником 1984 года",text:"Дневник ученика 7 класса с пятёрками и записями учителей. Хорошо видно, как было устроено расписание того времени."},
+  {id:"ШМ-046",hall:"Достижения",title:"Кубок городской спартакиады",year:"1988",icon:"cup",from:"Спортивный зал славы",text:"Школьная команда заняла первое место по лёгкой атлетике среди всех школ города."},
+  {id:"ШМ-052",hall:"Достижения",title:"Медаль олимпиады по географии",year:"2019",icon:"globe",from:"Передана призёром",text:"Призёр регионального этапа всероссийской олимпиады школьников передал медаль в музей после выпуска."},
+  {id:"ШМ-058",hall:"Достижения",title:"Золотая медаль выпускника",year:"2005",icon:"medal",from:"Передана выпускницей",text:"Одна из золотых медалей «За особые успехи в учении». Список всех медалистов школы ведётся с 1960 года."}
+];
+const CHRONICLE=[
+  ["1936","Открытие школы","Школа приняла первых учеников в деревянном здании на восемь классов."],
+  ["1941","Годы войны","Учителя и старшеклассники уходят на фронт. Школьники собирают посылки для бойцов."],
+  ["1946","Первый выпуск","Аттестаты зрелости получили 23 выпускника."],
+  ["1968","Новое здание","Школа переехала в трёхэтажное кирпичное здание, где учится и сегодня."],
+  ["1986","Открытие музея","Учителя истории и ученики собрали первые экспонаты школьного музея."],
+  ["2011","Школа 21 века","Появились компьютерные классы и интерактивные доски."],
+  ["2026","90-летний юбилей","Музей открывает виртуальную экспозицию, доступную каждому выпускнику."]
+];
+const PEOPLE=[
+  ["А","Анна Петровна Иванова","Учитель русского языка, 1952–1989","Проработала в школе 37 лет. Основала школьный литературный кружок."],
+  ["Н","Николай Семёнович Павлов","Первый директор, 1936–1955","Руководил школой в военные годы и сохранил её работу без перерывов."],
+  ["Е","Елена Сергеевна Кузьмина","Основатель музея, 1986","Учитель истории, собравшая первые экспонаты вместе с учениками."],
+  ["Д","Дмитрий Алексеев","Выпускник 1994 года","Врач-хирург, ежегодно рассказывает старшеклассникам о профессии."]
+];
+const SAMPLE_NOTES=[
+  ["Спасибо учителям за всё! Помню, как мы готовили смотр строя и песни.","Ирина, выпуск 1987 (пример)"],
+  ["Нашёл на фото первого выпуска своего прадеда. Очень трогательно.","Артём, 10 «Б» (пример)"]
+];
+
+const $=s=>document.querySelector(s);
+let hall=HALLS[0];
+function renderHalls(){
+  $("#halls").innerHTML=HALLS.map(h=>`<button type="button" aria-pressed="${h===hall}" data-h="${h}">${h}</button>`).join("");
+}
+function renderGrid(){
+  const list=EXHIBITS.filter(e=>hall===HALLS[0]||e.hall===hall);
+  $("#grid").innerHTML=list.map(e=>`<button class="item" type="button" data-id="${e.id}">
+    <div class="pic" aria-hidden="true">${ICONS[e.icon]}</div>
+    <div class="tag"><span class="label">${e.hall}</span><h3>${e.title}</h3>
+    <div class="meta"><span>${e.year}</span><span>Инв. № ${e.id}</span></div></div></button>`).join("");
+}
+$("#halls").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;hall=b.dataset.h;renderHalls();renderGrid();});
+$("#grid").addEventListener("click",ev=>{const b=ev.target.closest(".item");if(!b)return;openItem(EXHIBITS.find(e=>e.id===b.dataset.id));});
+const dlg=$("#dlg");
+function openItem(e){
+  $("#dlgPic").innerHTML=ICONS[e.icon];$("#dlgHall").textContent=e.hall;$("#dlgTitle").textContent=e.title;$("#dlgText").textContent=e.text;
+  $("#dlgMeta").innerHTML=`<dt>Датировка</dt><dd>${e.year}</dd><dt>Инв. номер</dt><dd style="font-family:var(--mono)">${e.id}</dd><dt>Поступление</dt><dd>${e.from}</dd>`;
+  dlg.showModal();
+}
+$("#dlgClose").onclick=()=>dlg.close();
+dlg.addEventListener("click",ev=>{if(ev.target===dlg)dlg.close();});
+
+$("#timeline").innerHTML=CHRONICLE.map(([y,t,p])=>`<li><span class="yr">${y}</span><div><h3>${t}</h3><p>${p}</p></div></li>`).join("");
+$("#peopleList").innerHTML=PEOPLE.map(([a,n,r,p])=>`<article class="person"><div class="avatar" aria-hidden="true">${a}</div><div><h3>${n}</h3><span class="role">${r}</span><p>${p}</p></div></article>`).join("");
+
+const KEY="museum-notes";
+function loadNotes(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function renderNotes(){
+  const all=[...loadNotes(),...SAMPLE_NOTES];
+  $("#notes").innerHTML=all.map(([t,n])=>`<div class="note"><p>${esc(t)}</p><small>${esc(n)}</small></div>`).join("");
+}
+$("#gbForm").addEventListener("submit",ev=>{
+  ev.preventDefault();
+  const n=$("#gbName").value.trim(),t=$("#gbText").value.trim();if(!n||!t)return;
+  const arr=loadNotes();arr.unshift([t,n]);try{localStorage.setItem(KEY,JSON.stringify(arr))}catch(e){}
+  SAMPLE_NOTES.length&&renderNotes();
+  if(!loadNotes().length){$("#notes").insertAdjacentHTML("afterbegin",`<div class="note"><p>${esc(t)}</p><small>${esc(n)}</small></div>`)}
+  ev.target.reset();
+});
+renderHalls();renderGrid();renderNotes();
+</script>
+</body>
+</html>
